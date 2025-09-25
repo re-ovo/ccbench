@@ -2,6 +2,8 @@
 
 一个 Claude Code API 性能基准测试工具，用于测试不同提供商的响应速度和质量。
 
+![showcase](./docs/showcase.png)
+
 ## 功能特性
 
 - 🚀 **并发测试**: 同时测试多个 Claude Code 提供商
