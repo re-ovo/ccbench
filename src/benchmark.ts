@@ -64,7 +64,7 @@ export async function benchmarkProvider(
 
     if (firstTokenTime) {
       result.ttft = firstTokenTime - startTime;
-      result.tps = tokenCount > 0 ? (tokenCount / ((endTime - firstTokenTime) / 1000)) : 0;
+      result.tps = tokenCount > 0 ? (tokenCount / ((endTime - startTime) / 1000)) : 0;
     }
 
     result.status = "success";
