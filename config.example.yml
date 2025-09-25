@@ -1,0 +1,10 @@
+providers:
+  - name: provider1
+    authToken: your_auth_token_1
+    baseURL: https://api.provider1.com/v1
+  - name: provider2
+    authToken: your_auth_token_2
+    baseURL: https://api.provider2.com/v1
+  - name: provider3
+    authToken: your_auth_token_3
+    baseURL: https://api.provider3.com/v1

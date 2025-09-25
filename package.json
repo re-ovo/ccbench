@@ -1,0 +1,28 @@
+{
+  "name": "ccbench",
+  "module": "src/index.tsx",
+  "main": "src/index.tsx",
+  "bin": {
+    "ccbench": "./src/index.tsx"
+  },
+  "scripts": {
+    "start": "bun run src/index.tsx",
+    "dev": "bun run src/index.tsx"
+  },
+  "type": "module",
+  "private": true,
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.63.1",
+    "@tqman/ink-table": "^0.0.0-development",
+    "ink": "^6.3.1",
+    "react": "^19.1.1",
+    "uuid": "^13.0.0",
+    "yaml": "^2.8.1"
+  }
+}
