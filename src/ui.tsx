@@ -1,5 +1,5 @@
-import React from "react";
-import { Box, Text } from "ink";
+import React, { useState, useEffect } from "react";
+import { Box, Text, useInput } from "ink";
 import { Table } from "@tqman/ink-table";
 import type { BenchmarkProgress, BenchmarkResult } from "./benchmark";
 
@@ -36,9 +36,29 @@ function formatDuration(duration: number | undefined): string {
   return `${(duration / 1000).toFixed(2)}s`;
 }
 
+function maskProviderName(name: string): string {
+  if (name.length <= 2) return name;
+  if (name.length <= 4) return name[0] + "*".repeat(name.length - 2) + name[name.length - 1];
+  const start = name.slice(0, 2);
+  const end = name.slice(-2);
+  const middle = "*".repeat(name.length - 4);
+  return start + middle + end;
+}
+
 export function BenchmarkUI({ progress }: BenchmarkUIProps) {
+  const [isMasked, setIsMasked] = useState(true);
+
+  useInput((input, key) => {
+    if (input === 'm' || input === 'M') {
+      setIsMasked(!isMasked);
+    }
+  });
+
+  const displayProviderName = (name: string) =>
+    isMasked ? maskProviderName(name) : name;
+
   const tableData = progress.map((item) => ({
-    Provider: item.provider,
+    Provider: displayProviderName(item.provider),
     Status: item.status,
     TTFT: item.result ? formatNumber(item.result.ttft, "ms") : "─",
     TPS: item.result ? formatNumber(item.result.tps, " t/s") : "─",
@@ -96,7 +116,7 @@ export function BenchmarkUI({ progress }: BenchmarkUIProps) {
             .map((p) => (
               <Box key={p.provider}>
                 <Text color="red">
-                  {p.provider}: {p.result?.error}
+                  {displayProviderName(p.provider)}: {p.result?.error}
                 </Text>
               </Box>
             ))}
@@ -108,6 +128,12 @@ export function BenchmarkUI({ progress }: BenchmarkUIProps) {
           Running: {progress.filter((p) => p.status === "running").length} |
           Completed: {progress.filter((p) => p.status === "completed").length} |
           Total: {progress.length}
+        </Text>
+      </Box>
+
+      <Box marginTop={1}>
+        <Text color="gray">
+          Press 'M' to {isMasked ? 'show' : 'hide'} provider names
         </Text>
       </Box>
     </Box>
