@@ -19,7 +19,7 @@ export const presetMessage: () => MessageCreateParamsStreaming = () => {
           },
           {
             type: "text",
-            text: "写个100字的小故事",
+            text: "写个200字的小故事",
           },
         ],
       },
@@ -54,7 +54,7 @@ export const presetMessage: () => MessageCreateParamsStreaming = () => {
 export function setHeader(
   headers: HeadersInit | undefined,
   key: string,
-  value: string
+  value: string,
 ): HeadersInit {
   if (headers instanceof Headers) {
     headers.set(key, value);
@@ -64,7 +64,7 @@ export function setHeader(
   if (Array.isArray(headers)) {
     // 查找是否已有该 header
     const existing = headers.findIndex(
-      ([k]) => k.toLowerCase() === key.toLowerCase()
+      ([k]) => k.toLowerCase() === key.toLowerCase(),
     );
     if (existing >= 0) {
       headers[existing][1] = value;
