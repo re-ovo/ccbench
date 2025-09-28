@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, Text } from "ink";
-import {Table} from "@tqman/ink-table";
+import { Table } from "@tqman/ink-table";
 import type { BenchmarkProgress, BenchmarkResult } from "./benchmark";
 
 interface BenchmarkUIProps {
@@ -10,13 +10,13 @@ interface BenchmarkUIProps {
 const statusColors = {
   pending: "yellow",
   running: "blue",
-  completed: "green"
+  completed: "green",
 } as const;
 
 const resultColors = {
   success: "green",
   error: "red",
-  timeout: "yellow"
+  timeout: "yellow",
 } as const;
 
 function formatNumber(num: number | undefined, unit: string): string {
@@ -37,21 +37,26 @@ function formatDuration(duration: number | undefined): string {
 }
 
 export function BenchmarkUI({ progress }: BenchmarkUIProps) {
-  const tableData = progress.map(item => ({
+  const tableData = progress.map((item) => ({
     Provider: item.provider,
     Status: item.status,
     TTFT: item.result ? formatNumber(item.result.ttft, "ms") : "─",
     TPS: item.result ? formatNumber(item.result.tps, " t/s") : "─",
     Tokens: item.result ? (item.result.totalTokens || 0).toString() : "─",
-    Duration: item.result ? formatDuration(item.result.duration) : "─"
+    Duration: item.result ? formatDuration(item.result.duration) : "─",
+    Chunks: item.result ? (item.result?.chunks || 0).toString() : "─",
   }));
 
   const cellRenderer = (props: React.PropsWithChildren<{}>) => {
     const cellValue = props.children as string;
 
     // Check if this is a TTFT cell by matching the format
-    if (typeof cellValue === 'string' && cellValue.trimEnd().endsWith('ms') && cellValue !== "─") {
-      const ttftValue = parseFloat(cellValue.trimEnd().replace('ms', ''));
+    if (
+      typeof cellValue === "string" &&
+      cellValue.trimEnd().endsWith("ms") &&
+      cellValue !== "─"
+    ) {
+      const ttftValue = parseFloat(cellValue.trimEnd().replace("ms", ""));
       const color = getTtftColor(ttftValue);
       return <Text color={color}>{cellValue}</Text>;
     }
@@ -62,23 +67,37 @@ export function BenchmarkUI({ progress }: BenchmarkUIProps) {
   return (
     <Box flexDirection="column" padding={1}>
       <Box marginBottom={1}>
-        <Text bold color="cyan">Claude API Provider Benchmark</Text>
+        <Text bold color="cyan">
+          Claude API Provider Benchmark
+        </Text>
       </Box>
 
       <Table
         data={tableData}
-        columns={["Provider", "Status", "TTFT", "TPS", "Tokens", "Duration"]}
+        columns={[
+          "Provider",
+          "Status",
+          "TTFT",
+          "Chunks",
+          "TPS",
+          "Tokens",
+          "Duration",
+        ]}
         cell={cellRenderer}
       />
 
-      {progress.some(p => p.result?.error) && (
+      {progress.some((p) => p.result?.error) && (
         <Box flexDirection="column" marginTop={1}>
-          <Text bold color="red">Errors:</Text>
+          <Text bold color="red">
+            Errors:
+          </Text>
           {progress
-            .filter(p => p.result?.error)
-            .map(p => (
+            .filter((p) => p.result?.error)
+            .map((p) => (
               <Box key={p.provider}>
-                <Text color="red">{p.provider}: {p.result?.error}</Text>
+                <Text color="red">
+                  {p.provider}: {p.result?.error}
+                </Text>
               </Box>
             ))}
         </Box>
@@ -86,8 +105,8 @@ export function BenchmarkUI({ progress }: BenchmarkUIProps) {
 
       <Box marginTop={1}>
         <Text color="cyan">
-          Running: {progress.filter(p => p.status === "running").length} |
-          Completed: {progress.filter(p => p.status === "completed").length} |
+          Running: {progress.filter((p) => p.status === "running").length} |
+          Completed: {progress.filter((p) => p.status === "completed").length} |
           Total: {progress.length}
         </Text>
       </Box>
